@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 
 void printMenu()
 {
@@ -51,36 +52,33 @@ void gotoNextTimeFrame()
     std::cout << "Going to next time frame" << std::endl;
 }
 
+std::map<int,void(*)()> menuMap;
+/*
+Function pointer to store menu in map datastructure
+*/
+void initializeMenuMap(){
+    menuMap[1] = printHelp;
+    menuMap[2] = printMarketStats;
+    menuMap[3] = enterOffer;
+    menuMap[4] = enterBid;
+    menuMap[5] = printWallet;
+    menuMap[6] = gotoNextTimeFrame;
+}
+
 void processOption(int userOption)
 {
-    switch (userOption)
-    {
-    case 1:
-        printHelp();
-        break;
-    case 2:
-        printMarketStats();
-        break;
-    case 3:
-        enterOffer();
-        break;
-    case 4:
-        enterBid();
-        break;
-    case 5:
-        printWallet();
-        break;
-    case 6:
-        gotoNextTimeFrame();
-        break;
-    default:
+    if(userOption <=0 || userOption > 6){
         std::cout << "Invalid option choose. Choose 1-6" << std::endl;
+        return;
     }
+
+    menuMap[userOption]();
+
 }
 
 int main()
 {
-
+    initializeMenuMap();
     while (1)
     {
         printMenu();
