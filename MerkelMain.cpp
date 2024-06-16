@@ -1,7 +1,25 @@
 #include <iostream>
 
+
 #include "MerkelMain.hpp"
 
+MerkelMain::MerkelMain(){
+    menuMap[1] = std::bind(&MerkelMain::printHelp, this);
+    menuMap[2] = std::bind(&MerkelMain::printMarketStats, this);
+    menuMap[3] = std::bind(&MerkelMain::enterOffer, this);
+    menuMap[4] = std::bind(&MerkelMain::enterBid, this);
+    menuMap[5] = std::bind(&MerkelMain::printWallet, this);
+    menuMap[6] = std::bind(&MerkelMain::gotoNextTimeFrame, this);
+}
+//To separate concerns – construction creates the object, init makes the object start operating.
+void MerkelMain::init(){
+    int userOption;
+    while(true){
+        printMenu();
+        userOption = getUserInput();
+        processOption(userOption);
+    }
+}
 void MerkelMain::printMenu()
 {
     std::cout << "============================" << std::endl;
@@ -51,16 +69,6 @@ void MerkelMain::printWallet()
 void MerkelMain::gotoNextTimeFrame()
 {
     std::cout << "Going to next time frame" << std::endl;
-}
-
-void MerkelMain::initializeMenuMap(){
- /*   menuMap[1] = MerkelMain::printHelp;
-    menuMap[2] = MerkelMain::printMarketStats;
-    menuMap[3] = MerkelMain::enterOffer;
-    menuMap[4] = MerkelMain::enterBid;
-    menuMap[5] = MerkelMain::printWallet;
-    menuMap[6] = MerkelMain::gotoNextTimeFrame;
-*/
 }
 
 void MerkelMain::processOption(int userOption)
