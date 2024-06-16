@@ -5,6 +5,6 @@ int main()
 {
     MerkelMain obj;
     obj.init();
-
+    
     return 0;
 }
