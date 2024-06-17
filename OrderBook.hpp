@@ -1,4 +1,5 @@
-#pragma one
+#ifndef ORDERBOOK_H
+#define ORDERBOOK_H
 
 #include <string>
 #include <vector>
@@ -26,5 +27,8 @@ static double getHighPrice(const std::vector<OrderBookEntry>& orders);
 static double getLowPrice(const std::vector<OrderBookEntry>& orders);
 
 private:
+std::vector<OrderBookEntry> orders;
 
 };
+
+#endif

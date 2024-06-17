@@ -11,8 +11,6 @@ MerkelMain::MerkelMain()
     menuMap[4] = std::bind(&MerkelMain::enterBid, this);
     menuMap[5] = std::bind(&MerkelMain::printWallet, this);
     menuMap[6] = std::bind(&MerkelMain::gotoNextTimeFrame, this);
-
-    loadOrderBook();
 }
 // To separate concerns – construction creates the object, init makes the object start operating.
 void MerkelMain::init()
@@ -24,11 +22,6 @@ void MerkelMain::init()
         userOption = getUserInput();
         processOption(userOption);
     }
-}
-
-void MerkelMain::loadOrderBook()
-{
-    orders = CSVReader::readCSV("20200317.csv");
 }
 
 void MerkelMain::printMenu()
@@ -59,20 +52,16 @@ void MerkelMain::printHelp()
 
 void MerkelMain::printMarketStats()
 {
-    std::cout << "OrderBook contains " << orders.size() << " entries" << std::endl;
+    for (const std::string &p : orderBook.getKnownProducts())
+    {
+        std::cout << "Product : " << p << std::endl;
+        std::vector<OrderBookEntry> entries = orderBook.getOrders(OrderBookType::ask, p,
+                                                                  "2020/03/17 17:01:24.884492");
+        std::cout<<"Ask seen : "<<entries.size()<<std::endl;
+        std::cout<<"Max ask : "<<OrderBook::getHighPrice(entries)<<std::endl;
+        std::cout<<"Min ask : "<<OrderBook::getLowPrice(entries)<<std::endl;
 
-    unsigned int bids{};
-    unsigned int asks{};
-
-    for(const OrderBookEntry& entry : orders){
-        entry.printOrderBookEntry();
-        if(entry.type == OrderBookType::ask)
-            asks++;
-            else if(entry.type == OrderBookType::bid)
-            bids++;
     }
-
-    std::cout<<"OrderBook asks: "<<asks<<" bids : "<<bids<<std::endl;
 }
 
 void MerkelMain::enterOffer()

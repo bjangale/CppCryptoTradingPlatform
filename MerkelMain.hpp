@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "OrderBookEntry.hpp"
+#include "OrderBook.hpp"
 
 class MerkelMain
 {
@@ -13,7 +14,6 @@ public:
     void init();
 
 private:
-    void loadOrderBook();
     void printMenu();
     int  getUserInput();
     void printHelp();
@@ -25,5 +25,5 @@ private:
     void processOption(int userOption);
 
     std::map<int, std::function<void()>> menuMap;
-    std::vector<OrderBookEntry> orders;
+    OrderBook orderBook{"20200317.csv"};
 };

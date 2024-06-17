@@ -66,7 +66,6 @@ int main()
             catch (const std::exception &e)
             {
                 std::cout << "Bad double!" << std::endl;
-                throw e;
             }
             
         }

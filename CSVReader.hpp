@@ -7,7 +7,7 @@
 
 class CSVReader{
 public:
-    CSVReader();
+    CSVReader() = default;
     static std::vector<OrderBookEntry> readCSV(const std::string& fileName);
 
 private:
