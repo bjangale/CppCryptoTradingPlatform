@@ -5,7 +5,8 @@
 enum class OrderBookType
 {
     bid,
-    ask
+    ask,
+    unknown
 };
 
 class OrderBookEntry
@@ -29,4 +30,7 @@ public:
      *Print all OrderBookEntry parameters. 
      */
     void printOrderBookEntry() const;
+
+    static OrderBookType stringToOrderBookType(std::string s);
+    static std::string orderBookTypeToString(OrderBookType type);
 };

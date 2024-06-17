@@ -3,22 +3,6 @@
 
 #include "OrderBookEntry.hpp"
 
-/**
- * to_string converts order type to printable string
- */
-std::string to_string(OrderBookType type)
-{
-    switch (type)
-    {
-    case OrderBookType::bid:
-        return "bid";
-    case OrderBookType::ask:
-        return "ask";
-    default:
-        return "unknown";
-    }
-}
-
 OrderBookEntry::OrderBookEntry(double _price,
                                double _amount,
                                std::string _timestamp,
@@ -38,5 +22,28 @@ void OrderBookEntry::printOrderBookEntry() const
               << " Amount : " << std::setw(9) << amount
               << " Timestamp : " << timestamp
               << " Product : " << product
-              << " OrderBookType : " << to_string(type) << std::endl;
+              << " OrderBookType : " << orderBookTypeToString(type) << std::endl;
+}
+
+OrderBookType OrderBookEntry::stringToOrderBookType(std::string s){
+    if(s == "ask") return OrderBookType::ask;
+    if(s == "bid") return OrderBookType::bid;
+
+    return OrderBookType::unknown;
+}
+
+/**
+ * to_string converts order type to printable string
+ */
+std::string OrderBookEntry::orderBookTypeToString(OrderBookType type)
+{
+    switch (type)
+    {
+    case OrderBookType::bid:
+        return "bid";
+    case OrderBookType::ask:
+        return "ask";
+    default:
+        return "unknown";
+    }
 }
