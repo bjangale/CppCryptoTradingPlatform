@@ -4,15 +4,8 @@
 
 int main()
 {
-    // MerkelMain obj;
-    // obj.init();
-
-    std::string csvFileName{"20200317.csv"};
-
-    for (auto v : CSVReader::readCSV(csvFileName))
-    {
-        v.printOrderBookEntry();
-    }
-
+    MerkelMain obj;
+    obj.init();
+    
     return 0;
 }

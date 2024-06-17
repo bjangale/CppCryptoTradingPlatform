@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "MerkelMain.hpp"
+#include "CSVReader.hpp"
 
 MerkelMain::MerkelMain()
 {
@@ -27,17 +28,7 @@ void MerkelMain::init()
 
 void MerkelMain::loadOrderBook()
 {
-    orders.push_back(OrderBookEntry{0.02187308, 7.44564869, "2020/03/17 17:01:24.884492", "ETH/BTC", OrderBookType::bid});
-    orders.push_back(OrderBookEntry{0.02187307, 3.467434, "2020/03/17 17:01:24.884492", "ETH/BTC", OrderBookType::bid});
-    orders.push_back(OrderBookEntry{0.02187305, 6.85567013, "2020/03/17 17:01:24.884492", "ETH/BTC", OrderBookType::bid});
-    orders.push_back(OrderBookEntry{0.021873, 1.345345, "2020/03/17 17:01:24.884492", "ETH/BTC", OrderBookType::bid});
-    orders.push_back(OrderBookEntry{0.02187163, 0.03322569, "2020/03/17 17:01:24.884492", "ETH/BTC", OrderBookType::bid});
-
-    orders.push_back(OrderBookEntry{0.02189093, 9.80492203, "2020/03/17 17:01:24.884492", "ETH/BTC", OrderBookType::ask});
-    orders.push_back(OrderBookEntry{0.02189094, 10.91645003, "2020/03/17 17:01:24.884492", "ETH/BTC", OrderBookType::ask});
-    orders.push_back(OrderBookEntry{0.02189096, 6.85752424, "2020/03/17 17:01:24.884492", "ETH/BTC", OrderBookType::ask});
-    orders.push_back(OrderBookEntry{0.02189398, 9.14003499, "2020/03/17 17:01:24.884492", "ETH/BTC", OrderBookType::ask});
-    orders.push_back(OrderBookEntry{0.02189399, 9.14068583, "2020/03/17 17:01:24.884492", "ETH/BTC", OrderBookType::ask});
+    orders = CSVReader::readCSV("20200317.csv");
 }
 
 void MerkelMain::printMenu()
@@ -69,6 +60,19 @@ void MerkelMain::printHelp()
 void MerkelMain::printMarketStats()
 {
     std::cout << "OrderBook contains " << orders.size() << " entries" << std::endl;
+
+    unsigned int bids{};
+    unsigned int asks{};
+
+    for(const OrderBookEntry& entry : orders){
+        entry.printOrderBookEntry();
+        if(entry.type == OrderBookType::ask)
+            asks++;
+            else if(entry.type == OrderBookType::bid)
+            bids++;
+    }
+
+    std::cout<<"OrderBook asks: "<<asks<<" bids : "<<bids<<std::endl;
 }
 
 void MerkelMain::enterOffer()
