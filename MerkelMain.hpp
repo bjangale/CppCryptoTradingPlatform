@@ -26,4 +26,5 @@ private:
 
     std::map<int, std::function<void()>> menuMap;
     OrderBook orderBook{"20200317.csv"};
+    std::string currentTime; 
 };

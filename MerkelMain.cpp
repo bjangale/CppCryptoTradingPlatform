@@ -12,13 +12,16 @@ MerkelMain::MerkelMain()
     menuMap[5] = std::bind(&MerkelMain::printWallet, this);
     menuMap[6] = std::bind(&MerkelMain::gotoNextTimeFrame, this);
 }
+
 // To separate concerns – construction creates the object, init makes the object start operating.
 void MerkelMain::init()
 {
     int userOption;
+    currentTime = orderBook.getEarliestTime();
     while (true)
     {
         printMenu();
+        std::cout << "Current time is : " << currentTime << std::endl;
         userOption = getUserInput();
         processOption(userOption);
     }
@@ -57,10 +60,9 @@ void MerkelMain::printMarketStats()
         std::cout << "Product : " << p << std::endl;
         std::vector<OrderBookEntry> entries = orderBook.getOrders(OrderBookType::ask, p,
                                                                   "2020/03/17 17:01:24.884492");
-        std::cout<<"Ask seen : "<<entries.size()<<std::endl;
-        std::cout<<"Max ask : "<<OrderBook::getHighPrice(entries)<<std::endl;
-        std::cout<<"Min ask : "<<OrderBook::getLowPrice(entries)<<std::endl;
-
+        std::cout << "Ask seen : " << entries.size() << std::endl;
+        std::cout << "Max ask : " << OrderBook::getHighPrice(entries) << std::endl;
+        std::cout << "Min ask : " << OrderBook::getLowPrice(entries) << std::endl;
     }
 }
 
@@ -82,6 +84,7 @@ void MerkelMain::printWallet()
 void MerkelMain::gotoNextTimeFrame()
 {
     std::cout << "Going to next time frame" << std::endl;
+    currentTime = orderBook.getNexTime(currentTime);
 }
 
 void MerkelMain::processOption(int userOption)

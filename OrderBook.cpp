@@ -1,6 +1,5 @@
 
 #include <map>
-
 #include "OrderBook.hpp"
 
 /** contruct, reading a csv data file */
@@ -8,7 +7,6 @@ OrderBook::OrderBook(const std::string fileName)
 {
     orders = CSVReader::readCSV(fileName);
 }
-
 /** return vector of all known products in the dataset */
 std::vector<std::string> OrderBook::getKnownProducts()
 {
@@ -24,7 +22,6 @@ std::vector<std::string> OrderBook::getKnownProducts()
     {
         products.push_back(e.first);
     }
-
     return products;
 }
 
@@ -43,10 +40,8 @@ std::vector<OrderBookEntry> OrderBook::getOrders(OrderBookType type, std::string
             orders_sub.push_back(order);
         }
     }
-
-    return orders_sub;
+   return orders_sub;
 }
-
 /** return price of the highest bid in a sent set */
 double OrderBook::getHighPrice(const std::vector<OrderBookEntry> &orders)
 {
@@ -59,7 +54,6 @@ double OrderBook::getHighPrice(const std::vector<OrderBookEntry> &orders)
     }
     return max;
 }
-
 /** return price of the lowest bid in sent set */
 double OrderBook::getLowPrice(const std::vector<OrderBookEntry> &orders)
 {
@@ -71,3 +65,31 @@ double OrderBook::getLowPrice(const std::vector<OrderBookEntry> &orders)
     }
     return min;
 }
+
+    /** return ealiest time in the orderbook*/
+    std::string OrderBook::getEarliestTime()
+    {
+        return orders[0].timestamp;
+    }
+    
+    /** return the next time after the sent time in the orderbook */
+    std::string OrderBook::getNexTime(std::string timestamp)
+    {
+        std::string next_timeStamp{""};
+
+        for(const OrderBookEntry& e : orders)
+        {
+            if(e.timestamp > timestamp)
+            {
+                next_timeStamp = e.timestamp;
+                break;
+            }
+        }
+
+        if(next_timeStamp == "")
+        {
+            next_timeStamp = orders[0].timestamp;
+        }
+
+        return next_timeStamp;
+    }
