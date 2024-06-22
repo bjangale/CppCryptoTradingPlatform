@@ -6,7 +6,8 @@ enum class OrderBookType
 {
     bid,
     ask,
-    unknown
+    unknown,
+    sale
 };
 
 class OrderBookEntry
@@ -38,5 +39,15 @@ public:
                                    const OrderBookEntry &e2)
     {
         return e1.timestamp < e2.timestamp;
+    }
+
+    static bool compareByPriceAsc(const OrderBookEntry &e1, const OrderBookEntry &e2)
+    {
+        return e1.price < e2.price;
+    }
+
+    static bool compareByPriceDesc(const OrderBookEntry &e1, const OrderBookEntry &e2)
+    {
+        return e1.price > e2.price;
     }
 };

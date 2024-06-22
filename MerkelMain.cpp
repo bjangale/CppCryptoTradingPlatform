@@ -163,6 +163,16 @@ void MerkelMain::printWallet()
 void MerkelMain::gotoNextTimeFrame()
 {
     std::cout << "Going to next time frame" << std::endl;
+    for (const std::string &product : orderBook.getKnownProducts())
+    {
+        std::cout << "matching " << product << std::endl;
+        std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids(product, currentTime);
+        std::cout << "Sale size : " << sales.size() << std::endl;
+        for (const OrderBookEntry &obj : sales)
+        {
+            obj.printOrderBookEntry();
+        }
+    }
     currentTime = orderBook.getNexTime(currentTime);
 }
 

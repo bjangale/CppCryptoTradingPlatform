@@ -46,6 +46,8 @@ public:
     /** print all order in orderbook */
     void printOrderBook();
 
+    std::vector<OrderBookEntry> matchAsksToBids(const std::string& product,const std::string& timestamp);
+
 private:
     std::vector<OrderBookEntry> orders;
 };

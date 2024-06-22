@@ -25,9 +25,14 @@ void OrderBookEntry::printOrderBookEntry() const
               << " OrderBookType : " << orderBookTypeToString(type) << std::endl;
 }
 
-OrderBookType OrderBookEntry::stringToOrderBookType(std::string s){
-    if(s == "ask") return OrderBookType::ask;
-    if(s == "bid") return OrderBookType::bid;
+OrderBookType OrderBookEntry::stringToOrderBookType(std::string s)
+{
+    if (s == "ask")
+        return OrderBookType::ask;
+    if (s == "bid")
+        return OrderBookType::bid;
+    if (s == "sale")
+        return OrderBookType::sale;
 
     return OrderBookType::unknown;
 }
@@ -43,6 +48,8 @@ std::string OrderBookEntry::orderBookTypeToString(OrderBookType type)
         return "bid";
     case OrderBookType::ask:
         return "ask";
+    case OrderBookType::sale:
+        return "sale";
     default:
         return "unknown";
     }
