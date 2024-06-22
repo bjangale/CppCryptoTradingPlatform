@@ -2,6 +2,7 @@
 #include <map>
 #include <limits>
 #include <iostream>
+#include <algorithm>
 
 #include "OrderBook.hpp"
 
@@ -143,4 +144,20 @@ double OrderBook::getOrderBookDepth(std::string product, OrderBookType type)
         }
     }
     return totalVolume;
+}
+
+/** insert order in ordrebook in ascending timesorted order */
+void OrderBook::insertOrder(OrderBookEntry &e)
+{
+    orders.push_back(e);
+    std::sort(orders.begin(), orders.end(), OrderBookEntry::compareByTimeStamp);
+}
+
+/** print all order in orderbook */
+void OrderBook::printOrderBook()
+{
+    for (auto const &e : orders)
+    {
+        e.printOrderBookEntry();
+    }
 }

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 #include "MerkelMain.hpp"
 #include "CSVReader.hpp"
@@ -42,8 +43,19 @@ void MerkelMain::printMenu()
 int MerkelMain::getUserInput()
 {
     int userOption;
+    std::string line;
     std::cout << "Type in 1-6" << std::endl;
-    std::cin >> userOption;
+    // std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, line);
+    try
+    {
+        userOption = std::stoi(line);
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << "MerkelMain::getUserInput Bad input! " << line << std::endl;
+        std::cout << "Exception : " << e.what() << std::endl;
+    }
     return userOption;
 }
 
@@ -86,12 +98,61 @@ void MerkelMain::printMarketStats()
 
 void MerkelMain::enterOffer()
 {
-    std::cout << "Make an offer - enter amount" << std::endl;
+    std::cout << "Make an ask - enter amount : product, price, amount, eg. ETC/BTC, 200, 0.5" << std::endl;
+    std::string line{};
+    // std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, line);
+    std::cout << "Ask : " << line << std::endl;
+
+    std::vector<std::string> tokens = CSVReader::tokenise(line, ',');
+
+    if (tokens.size() != 3)
+    {
+        std::cout << "MerkelMain::enterOffe Bad input!" << std::endl;
+    }
+    else
+    {
+        try
+        {
+            OrderBookEntry obe = CSVReader::stringToOrderBookEntry(tokens[1], tokens[2],
+                                                                   currentTime, tokens[0],
+                                                                   OrderBookType::ask);
+            orderBook.insertOrder(obe);
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << "MerkelMain::enterOffe Bad input!" << std::endl;
+        }
+    }
 }
 
 void MerkelMain::enterBid()
 {
-    std::cout << "Make an bid - enter amount" << std::endl;
+    std::cout << "Make an bid - enter amount : product, price, amount, eg. ETC/BTC, 200, 0.5" << std::endl;
+    std::string line{};
+    // std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, line);
+
+    std::vector<std::string> tokens = CSVReader::tokenise(line, ',');
+
+    if (tokens.size() != 3)
+    {
+        std::cout << "MerkelMain::enterBid Bad input!" << std::endl;
+    }
+    else
+    {
+        try
+        {
+            OrderBookEntry obe = CSVReader::stringToOrderBookEntry(tokens[1], tokens[2],
+                                                                   currentTime, tokens[0],
+                                                                   OrderBookType::bid);
+            orderBook.insertOrder(obe);
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << "MerkelMain::enterBid Bad input!" << std::endl;
+        }
+    }
 }
 
 void MerkelMain::printWallet()
