@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+
 #include "CSVReader.hpp"
 #include "OrderBookEntry.hpp"
 
@@ -28,11 +29,20 @@ public:
     static double getLowPrice(const std::vector<OrderBookEntry> &orders);
     /** return ealiest time in the orderbook*/
     std::string getEarliestTime();
-    /** return the next time after the 
-     * sent time in the orderbook.
+    /** return the next time after the sent time in the orderbook.
      * If there is no next timestamp then wrap around to the start.  
      */
     std::string getNexTime(std::string timeStamp);
+
+    /** return bid ask spread for given product  
+     *  bid ask spread is difference between high bid and low ask
+     */
+    double getBidAskSpread(std::string product);  
+    /** return order book dept for given product and OrderBookType(bid/ask)
+     * this metric measure the market liquidity by aggregating the totle
+     * volume bid and ask at various prices. 
+     */
+    double getOrderBookDepth(std::string product, OrderBookType);
 
 private:
     std::vector<OrderBookEntry> orders;

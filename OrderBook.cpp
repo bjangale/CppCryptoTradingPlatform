@@ -1,5 +1,8 @@
 
 #include <map>
+#include <limits>
+#include <iostream>
+
 #include "OrderBook.hpp"
 
 /** contruct, reading a csv data file */
@@ -40,7 +43,7 @@ std::vector<OrderBookEntry> OrderBook::getOrders(OrderBookType type, std::string
             orders_sub.push_back(order);
         }
     }
-   return orders_sub;
+    return orders_sub;
 }
 /** return price of the highest bid in a sent set */
 double OrderBook::getHighPrice(const std::vector<OrderBookEntry> &orders)
@@ -66,30 +69,78 @@ double OrderBook::getLowPrice(const std::vector<OrderBookEntry> &orders)
     return min;
 }
 
-    /** return ealiest time in the orderbook*/
-    std::string OrderBook::getEarliestTime()
+/** return ealiest time in the orderbook*/
+std::string OrderBook::getEarliestTime()
+{
+    return orders[0].timestamp;
+}
+
+/** return the next time after the sent time in the orderbook */
+std::string OrderBook::getNexTime(std::string timestamp)
+{
+    std::string next_timeStamp{""};
+
+    for (const OrderBookEntry &e : orders)
     {
-        return orders[0].timestamp;
+        if (e.timestamp > timestamp)
+        {
+            next_timeStamp = e.timestamp;
+            break;
+        }
     }
-    
-    /** return the next time after the sent time in the orderbook */
-    std::string OrderBook::getNexTime(std::string timestamp)
+
+    if (next_timeStamp == "")
     {
-        std::string next_timeStamp{""};
-
-        for(const OrderBookEntry& e : orders)
-        {
-            if(e.timestamp > timestamp)
-            {
-                next_timeStamp = e.timestamp;
-                break;
-            }
-        }
-
-        if(next_timeStamp == "")
-        {
-            next_timeStamp = orders[0].timestamp;
-        }
-
-        return next_timeStamp;
+        next_timeStamp = orders[0].timestamp;
     }
+
+    return next_timeStamp;
+}
+/** return bid ask spread for given product
+ *  bid ask spread is difference between high bid and low ask
+ */
+double OrderBook::getBidAskSpread(std::string product)
+{
+    double highBid = std::numeric_limits<double>::min();
+    double lowAsk = std::numeric_limits<double>::max();
+    for (const OrderBookEntry &e : orders)
+    {
+        if (e.type == OrderBookType::ask)
+        {
+            lowAsk = std::min(lowAsk, e.price);
+        }
+        else if (e.type == OrderBookType::bid)
+        {
+            highBid = std::max(highBid, e.price);
+        }
+    }
+
+    if (lowAsk == std::numeric_limits<double>::max() ||
+        highBid == std::numeric_limits<double>::min())
+    {
+        std::cout << "OrderBook::getBidAskSpread - "
+                  << "Spread cannot be calculated"
+                  << std::endl;
+        throw;
+    }
+
+    return highBid - lowAsk;
+}
+
+/** return order book dept for given product and OrderBookType(bid/ask)
+ * this metric measure the market liquidity by aggregating the totle
+ * volume(amount) bid and ask at various prices.
+ */
+double OrderBook::getOrderBookDepth(std::string product, OrderBookType type)
+{
+    double totalVolume{};
+    for (auto const &e : orders)
+    {
+        if (e.product == product &&
+            e.type == type)
+        {
+            totalVolume += e.amount;
+        }
+    }
+    return totalVolume;
+}

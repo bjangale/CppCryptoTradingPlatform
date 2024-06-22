@@ -64,6 +64,24 @@ void MerkelMain::printMarketStats()
         std::cout << "Max ask : " << OrderBook::getHighPrice(entries) << std::endl;
         std::cout << "Min ask : " << OrderBook::getLowPrice(entries) << std::endl;
     }
+
+    /*print bid spread for all products type*/
+    std::cout << "Bid Ask spread : " << std::endl;
+    for (const std::string &p : orderBook.getKnownProducts())
+    {
+        std::cout << "Prouct : " << p << " Bid Ask Spread : "
+                  << orderBook.getBidAskSpread(p) << std::endl;
+    }
+
+    /** print orderbook depth of bid and ask for all product types */
+    std::cout << "OrderBook depth for bid and ask : " << std::endl;
+    for (const std::string &p : orderBook.getKnownProducts())
+    {
+        std::cout << "Product : " << p << " Ask depth : "
+                  << orderBook.getOrderBookDepth(p, OrderBookType::ask) << std::endl;
+        std::cout << "Product : " << p << " Bid depth : "
+                  << orderBook.getOrderBookDepth(p, OrderBookType::bid) << std::endl;
+    }
 }
 
 void MerkelMain::enterOffer()
