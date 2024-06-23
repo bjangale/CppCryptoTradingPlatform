@@ -7,7 +7,8 @@ enum class OrderBookType
     bid,
     ask,
     unknown,
-    sale
+    bidsale,
+    asksale
 };
 
 class OrderBookEntry
@@ -18,7 +19,7 @@ public:
     std::string timestamp;
     std::string product;
     OrderBookType type;
-
+    std::string userName;
     /**
      *OrderBookEntry contstructor take 5 arguments
      */
@@ -26,7 +27,8 @@ public:
                    double _amount,
                    std::string _timestamp,
                    std::string _product,
-                   OrderBookType _type);
+                   OrderBookType _type,
+                   std::string _userName = "dataset");
     /**
      *Print all OrderBookEntry parameters.
      */

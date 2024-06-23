@@ -6,6 +6,7 @@
 
 #include "OrderBookEntry.hpp"
 #include "OrderBook.hpp"
+#include "Wallet.hpp"
 
 class MerkelMain
 {
@@ -26,5 +27,6 @@ private:
 
     std::map<int, std::function<void()>> menuMap;
     OrderBook orderBook{"test.csv"};
-    std::string currentTime; 
+    std::string currentTime;
+    Wallet wallet;
 };

@@ -1,5 +1,8 @@
+#include <vector>
+#include <iostream>
 
 #include "Wallet.hpp"
+#include "CSVReader.hpp"
 
 Wallet::Wallet()
 {
@@ -44,6 +47,28 @@ bool Wallet::removeCurrency(std::string type, double amount)
     }
     return false;
 }
+
+/** checks if the wallet can cope with this ask/bid */
+bool Wallet::canFulfillOrder(OrderBookEntry order)
+{
+    std::vector<std::string> currs = CSVReader::tokenise(order.product, '/');
+    double amount = order.amount * order.price;
+
+    if (order.type == OrderBookType::ask)
+    {
+        std::string currency = currs[0];
+        std::cout << "Wallet::canFulfillOrder " << currency << " amount : " << amount << std::endl;
+        return containsCurrency(currency, amount);
+    }
+    else if (order.type == OrderBookType::bid)
+    {
+        std::string currency = currs[1];
+        std::cout << "Wallet::canFulfillOrder " << currency << " amount : " << amount << std::endl;
+        return containsCurrency(currency, amount);
+    }
+    return false;
+}
+
 /** generate string representation of wallet */
 std::string Wallet::toString()
 {
@@ -54,4 +79,32 @@ std::string Wallet::toString()
         str += currency.first + " " + std::to_string(currency.second) + "\n";
     }
     return str;
+}
+/** update the content of the wallet
+ * assumes the order was made by owner of the wallet
+ */
+void Wallet::processSale(const OrderBookEntry &sale)
+{
+    std::vector<std::string> currs = CSVReader::tokenise(sale.product, '/');
+    // ask
+    if (sale.type == OrderBookType::asksale)
+    {
+        double outgoinAmount = sale.amount;
+        std::string outgoingCurrency = currs[0];
+        double incomingAmount = sale.amount * sale.price;
+        std::string incomingCurrency = currs[1];
+
+        currencyMap[incomingCurrency] += incomingAmount;
+        currencyMap[outgoingCurrency] -= outgoinAmount;
+    }
+    else if (sale.type == OrderBookType::bidsale)
+    {
+        double incomingAmount = sale.amount;
+        std::string incomingCurrency = currs[0];
+        double outgoinAmount = sale.amount * sale.price;
+        std::string outgoingCurrency = currs[1];
+
+        currencyMap[incomingCurrency] += incomingAmount;
+        currencyMap[outgoingCurrency] -= outgoinAmount;
+    }
 }

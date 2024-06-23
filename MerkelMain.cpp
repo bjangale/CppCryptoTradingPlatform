@@ -19,6 +19,8 @@ void MerkelMain::init()
 {
     int userOption;
     currentTime = orderBook.getEarliestTime();
+    wallet.insertCurrency("BTC", 10);
+
     while (true)
     {
         printMenu();
@@ -117,7 +119,15 @@ void MerkelMain::enterOffer()
             OrderBookEntry obe = CSVReader::stringToOrderBookEntry(tokens[1], tokens[2],
                                                                    currentTime, tokens[0],
                                                                    OrderBookType::ask);
-            orderBook.insertOrder(obe);
+            if (wallet.canFulfillOrder(obe))
+            {
+                std::cout << "Wallet is good !" << std::endl;
+                orderBook.insertOrder(obe);
+            }
+            else
+            {
+                std::cout << "Wallet has insufficient funds." << std::endl;
+            }
         }
         catch (const std::exception &e)
         {
@@ -146,7 +156,15 @@ void MerkelMain::enterBid()
             OrderBookEntry obe = CSVReader::stringToOrderBookEntry(tokens[1], tokens[2],
                                                                    currentTime, tokens[0],
                                                                    OrderBookType::bid);
-            orderBook.insertOrder(obe);
+            if (wallet.canFulfillOrder(obe))
+            {
+                std::cout << "Wallet is good !" << std::endl;
+                orderBook.insertOrder(obe);
+            }
+            else
+            {
+                std::cout << "Wallet has insufficient funds." << std::endl;
+            }
         }
         catch (const std::exception &e)
         {
@@ -157,7 +175,8 @@ void MerkelMain::enterBid()
 
 void MerkelMain::printWallet()
 {
-    std::cout << "Your wallet is empty." << std::endl;
+    std::cout << "Wallet Balance : " << std::endl
+              << wallet.toString() << std::endl;
 }
 
 void MerkelMain::gotoNextTimeFrame()
@@ -168,9 +187,12 @@ void MerkelMain::gotoNextTimeFrame()
         std::cout << "matching " << product << std::endl;
         std::vector<OrderBookEntry> sales = orderBook.matchAsksToBids(product, currentTime);
         std::cout << "Sale size : " << sales.size() << std::endl;
-        for (const OrderBookEntry &obj : sales)
+        for (const OrderBookEntry& sale : sales)
         {
-            obj.printOrderBookEntry();
+            sale.printOrderBookEntry();
+            if(sale.userName == "simuser"){
+                wallet.processSale(sale);
+            }
         }
     }
     currentTime = orderBook.getNexTime(currentTime);
