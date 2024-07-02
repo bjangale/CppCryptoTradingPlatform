@@ -108,3 +108,15 @@ void Wallet::processSale(const OrderBookEntry &sale)
         currencyMap[outgoingCurrency] -= outgoinAmount;
     }
 }
+
+/** Print wallet */
+void Wallet::printWallet() const
+{
+    std::cout << std::setw(10) << std::left << "Currency"
+              << std::setw(10) << std::left << "Amount" << std::endl;
+    for (const auto &[currency, amount] : currencyMap)
+    {
+        std::cout << std::setw(10) << std::left << currency
+                  << std::setw(10) << std::left << amount << std::endl;
+    }
+}

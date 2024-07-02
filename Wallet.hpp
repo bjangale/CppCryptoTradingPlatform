@@ -1,7 +1,10 @@
 #pragma once
 
 #include <string>
-#include <map>
+#include <unordered_map>
+#include <stdexcept>
+#include <iostream>
+#include <iomanip>
 
 #include "OrderBookEntry.hpp"
 
@@ -22,8 +25,10 @@ public:
     /** update the content of the wallet
      * assumes the order was made by owner of the wallet
      */
-    void processSale(const OrderBookEntry& sale);
+    void processSale(const OrderBookEntry &sale);
+    /** Print wallet */
+    void printWallet() const;
 
 private:
-    std::map<std::string, double> currencyMap;
+    std::unordered_map<std::string, double> currencyMap;
 };

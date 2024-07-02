@@ -4,6 +4,7 @@
 #include "OrderBookEntry.hpp"
 #include "CSVReader.hpp"
 #include "Wallet.hpp"
+#include "WalletManager.hpp"
 
 int main()
 {
@@ -24,5 +25,20 @@ int main()
                   << wallet.toString() << std::endl;
     */
 
+/** WalletManager test */
+/*
+    WalletManager wallMgr;
+
+    wallMgr.addWallet("Bhushan");
+    wallMgr.addWallet("Bhumi");
+
+    wallMgr.gerUserWallet("Bhushan").insertCurrency("BTC", 30.235);
+    wallMgr.gerUserWallet("Bhushan").insertCurrency("USD", 35.235);
+
+    wallMgr.gerUserWallet("Bhumi").insertCurrency("DOGE", 21.843);
+    wallMgr.gerUserWallet("Bhumi").insertCurrency("ETH", 45.355);
+
+    wallMgr.printWallets();
+  */
     return 0;
 }
